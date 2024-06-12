@@ -27,7 +27,7 @@ state of a patient must be died or alive - we adjust that as well
   
 # Your Question - Is dying independent of sex?
 
-
+As we look at the data, the appropriate variables to use would be either sex that is all lowercase or Sex with the uppercase S and I feel that the appropriate one would be the Sex with the uppercase because the variable are just F and M. The second variable that would apply to this would be the result because because the only ones you can use are alive or dead, two options. 
 
 
 
@@ -35,21 +35,47 @@ state of a patient must be died or alive - we adjust that as well
 ## Graphical results - use ggplot commands to do this  
 
 
+```{r}
+dd2 <- kRdata %>% group_by(result,Sex) %>% summarize(count=n()) %>% mutate(prcnt=count/sum(count))
 
-  
 
+# the group_by followed by summarize(count=n())
 
+basicC <- ggplot(dd2,aes(x=result,y=count,fill=Sex))
+basicC + geom_bar(stat="identity",position="dodge")
+
+#Now for percentage plot
+
+basicCC <- ggplot(dd2,aes(x=result,y=prcnt*100,fill=Sex)) 
+basicCC + geom_bar(stat="identity", position = "dodge")
+```
+
+As we look at the graphs, we see that there were more than man in the alive graph. The dead pile shows more men that were dead than female. The alive pile represents 55% of people that were female and about 
 
 
 
   
 ## Numerical results
+```{r}
+table1 <- xtabs(~result+ Sex, data=kRdata)
+rowPerc(table1)
+colPerc(table1)
+```
+
+When looking at these results, we see that of the dead people, about more than twice male. At 1.4% of females were dead whereas 3% of males were dead. This is showing that it was killing males at double the rate then females. 
 
 
 ## Inferential results 
 
+```{r}
+chisq.test(table1)
+chisqtestGC(table1)
+fisher.test(table1)
+```
 
-
+The females were from a population of a total of 1856 shows that 25 dies whereas in the male population of 1455, 44 died. There wasn't a difference between the sexes of who was getting killed. In the fishers exact test, the odds of dying if you're a man is 2.3 times more than if you were a woman. 
 
 ## Conclusions
+
+As we entered the codes we got some unexpected results. This showed us that sex did not play a role in who was dying. There were more female than male in the graphical results but that didn't matter. Males died at a rate of 2.3 yimes faster rate than the female. 
 
